@@ -1,0 +1,37 @@
+#app {
+    overflow: hidden;
+}
+
+.content {
+    margin-left: 235px;
+    margin-right: 10px;
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow-y: auto;
+    bottom: 0;
+    width: 230px;
+    z-index: 200;
+    transition: 0.3s;
+    padding: 10px;
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+}
+
+/*.sidebar.open {*/
+/*    left: 0;*/
+/*}*/
+
+/*.sidebar.open .sidebar__btn {*/
+/*    left: 95%;*/
+/*    transform: rotate(-180deg);*/
+/*}*/
+
+/*.sidebar__btn {*/
+/*    transition: 0.3s;*/
+/*    left: 100%;*/
+/*    top: 43%;*/
+/*    position: absolute;*/
+/*}*/
