@@ -3,8 +3,8 @@ export function row(content, styles = "") {
     </div>`
 }
 
-export function col(content) {
-    return `<div class="col-sm">${content}
+export function col(content, style) {
+    return `<div class="col-sm" style="${style}">${content}
     </div>`
 }
 

@@ -1,4 +1,5 @@
 import {col, css, row} from "../utils";
+import {COLUMNS, IMG} from "./reducer";
 
 class Block {
     constructor(value, options) {
@@ -28,8 +29,8 @@ export class ImgModel extends Block {
     }
 
     toHtml() {
-        const {styles = "", alt = "", imgStyles = ""} = this.options
-        return row(`<img src=${this.value} alt="${alt}" style="${css(imgStyles)}" />`, css(styles))
+        const {styles = "", imgAlt = "", imgStyles = ""} = this.options
+        return row(`<img src=${this.value} alt="${imgAlt}" style="${css(imgStyles)}" />`, css(styles))
     }
 }
 
@@ -39,8 +40,9 @@ export class ColumnsModel extends Block {
     }
 
     toHtml() {
-        const html = this.value.map(col).join(" ")
-        return row(html)
+        const {styles = "", colStyles = ""} = this.options
+        const html = this.value.map(value => col(value, css(colStyles))).join(" ")
+        return row(html, css(styles))
     }
 }
 
@@ -56,15 +58,31 @@ export class TextModel extends Block {
 }
 
 export function addBlockForm(model) {
+    let columnInputs = ""
+    if (model === COLUMNS) {
+        columnInputs = `<div class="form-group">
+        <input class="form-control form-control-sm" name="colStyles" placeholder="Column styles">
+      </div>`
+    }
+    let imgInputs = ""
+    if (model === IMG) {
+        imgInputs = `<div class="form-group">
+        <input class="form-control form-control-sm" name="imgStyles" placeholder="Image styles">
+      </div><div class="form-group">
+        <input class="form-control form-control-sm" name="imgAlt" placeholder="Image Alt">
+      </div>`
+    }
     return `
     <form name="${model}">
       <h5 class="text-capitalize">${model}</h5>
       <div class="form-group">
-        <input class="form-control form-control-sm" name="value" placeholder="value">
+        <input class="form-control form-control-sm" name="value" placeholder="Value">
       </div>
       <div class="form-group">
-        <input class="form-control form-control-sm" name="styles" placeholder="styles">
+        <input class="form-control form-control-sm" name="styles" placeholder="Styles">
       </div>
+      ${columnInputs}
+      ${imgInputs}
       <button type="submit" class="btn btn-primary btn-sm">Добавить</button>
     </form>
     <hr />

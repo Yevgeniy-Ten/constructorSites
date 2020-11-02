@@ -1,5 +1,5 @@
-import {addBlockForm, TitleModel, ImgModel} from "./blocks";
-import {TextModel} from "./blocks";
+import {addBlockForm} from "./Blocks";
+import {getNewModel, TEXT, COLUMNS, IMG, TITLE} from "./reducer";
 
 export class Panel {
     constructor(selector, contentUpdater) {
@@ -10,35 +10,47 @@ export class Panel {
 
     init() {
         this.$el.insertAdjacentHTML("afterbegin", this.template)
-        this.clickHandler = this.clickHandler.bind(this)
-        this.$el.addEventListener("submit", this.clickHandler)
+        this.addModel = this.addModel.bind(this)
+        this.$el.addEventListener("submit", this.addModel)
     }
 
-    clickHandler(event) {
+    addModel(event) {
         event.preventDefault()
         const model = event.target.name
-        const value = event.target.value.value
-        const styles = event.target.styles.value
-        let newModel = null;
-        if (model === "text") {
-            newModel = new TextModel(value, {styles})
-        } else if (model === "title") {
-            newModel = new TitleModel(value, {styles})
-        } else if (model === "img") {
-            newModel = new ImgModel(value, {styles})
+        getNewModel(model)
+        let value = event.target.value.value
+        let colStyles;
+        let imgAlt;
+        let imgStyles;
+        if (model === COLUMNS) {
+            value = value.split("&")
+            colStyles = event.target.colStyles.value
         }
+        if (model === IMG) {
+            imgStyles = event.target.imgStyles.value
+            imgAlt = event.target.imgAlt.value
+        }
+        const styles = event.target.styles.value
+        const newModel = getNewModel(model, value, {styles, colStyles, imgAlt, imgStyles})
         this.contentUpdater(newModel)
         event.target.value.value = "";
         event.target.styles.value = ""
+        event.target.imgStyles.value = ""
+        event.target.imgAlt.value = ""
+        event.target.colStyles.value = ""
     }
 
     get template() {
         return [
-            addBlockForm("text"),
-            addBlockForm("title"),
-            addBlockForm("img"),
-            addBlockForm("columns"),
+            addBlockForm(TEXT),
+            addBlockForm(TITLE),
+            addBlockForm(IMG),
+            addBlockForm(COLUMNS),
         ].join(" ")
+    }
+
+    destroy() {
+        this.$el.removeEventListener("submit", this.addModel)
     }
 }
 
